@@ -35,8 +35,20 @@ export const smoothstep = (a, b, x) => {
 const matCache = new Map();
 
 /** Material standar yang di-cache (warna + opsi). */
+/**
+ * Material standar yang di-cache.
+ * Tekstur ikut menjadi bagian kunci (lewat id-nya) supaya dua material
+ * dengan warna sama tetapi peta berbeda tidak saling menimpa —
+ * mis. papan nama "SRIWIJAYA" vs "JAKABARING SPORT CITY".
+ */
 export function mat(color, opts = {}) {
-  const key = `${color}|${JSON.stringify(opts)}`;
+  const texIds = ['map', 'emissiveMap', 'roughnessMap', 'normalMap']
+    .map((k) => (opts[k] ? opts[k].id : 0))
+    .join(',');
+  const rest = JSON.stringify(opts, (k, v) =>
+    k === 'map' || k === 'emissiveMap' || k === 'roughnessMap' || k === 'normalMap' ? undefined : v
+  );
+  const key = `${color}|${texIds}|${rest}`;
   let m = matCache.get(key);
   if (!m) {
     m = new THREE.MeshStandardMaterial({ color: new THREE.Color(color), ...opts });

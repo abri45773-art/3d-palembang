@@ -116,8 +116,21 @@ const labelIds = world.labels.map((l) => l.id);
 const missing = labelIds.filter((id) => !ids.includes(id));
 if (missing.length) dataProblems.push(`label tanpa data: ${missing.join(', ')}`);
 
+/* regresi: dua tekstur berbeda pada warna sama tidak boleh berbagi material */
+const { mat } = await import('../src/lib/util.js');
+const texA = new THREE.CanvasTexture(globalThis.document.createElement('canvas'));
+const texB = new THREE.CanvasTexture(globalThis.document.createElement('canvas'));
+const mA = mat('#101418', { map: texA, roughness: 0.5 });
+const mB = mat('#101418', { map: texB, roughness: 0.5 });
+const matCacheOk = mA !== mB && mA.map === texA && mB.map === texB;
+if (!matCacheOk) fail_extra.push('cache material menabrak dua tekstur berbeda');
+const mC = mat('#101418', { map: texA, roughness: 0.5 });
+if (mC !== mA) fail_extra.push('cache material tidak dipakai ulang untuk kunci yang sama');
+
 /* ------------------------- laporan -------------------------------- */
 const fail = [];
+const fail_extra = [];
+fail.push(...fail_extra);
 if (nan) fail.push(`${nan} mesh dengan nilai NaN`);
 if (emptyGeo) fail.push(`${emptyGeo} mesh geometri kosong`);
 if (meshes < 60) fail.push(`mesh terlalu sedikit (${meshes})`);
@@ -135,6 +148,7 @@ console.log(`lampu             : ${lights}`);
 console.log(`bangunan prosedural: ${world.stats.buildings}`);
 console.log(`label landmark    : ${world.labels.length}`);
 console.log(`kurva LRT         : ${world.sky ? 'ok' : 'gagal'}`);
+console.log(`cache material    : ${matCacheOk ? 'unik per tekstur' : 'BERTABRAKAN'}`);
 console.log(`nilai malam/jam   : ${JSON.stringify(nightByHour)}`);
 console.log('──────────────────────────────────────────────────');
 

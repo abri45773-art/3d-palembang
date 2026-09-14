@@ -34,10 +34,11 @@ export function buildTerrain(parent) {
   const g = group('terrain', parent);
 
   const asphalt = makeAsphalt();
+  asphalt.repeat.set(14, 14);      // UV kotak 0..1 per muka
   const ground = makeGround();
-  ground.repeat.set(24, 18);
+  ground.repeat.set(0.03, 0.03);   // UV ExtrudeGeometry memakai satuan dunia
   const earth = makeEarth();
-  earth.repeat.set(30, 1);
+  earth.repeat.set(0.05, 0.05);
 
   const mEarth = mat('#5a4b36', { map: earth, roughness: 1 });
   const mGrass = mat('#77855a', { map: ground, roughness: 1 });
