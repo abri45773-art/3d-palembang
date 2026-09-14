@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Miniatur 3D Kota Palembang — Bumi Sriwijaya</title>
+    <meta name="description" content="Model 3D miniatur Kota Palembang: Jembatan Ampera, Masjid Agung, Benteng Kuto Besak, Monpera, Pulau Kemaro, dan Sungai Musi." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene"></canvas>
+
+      <!-- Loading -->
+      <div id="loader">
+        <div class="loader-inner">
+          <div class="loader-bridge">
+            <span></span><span></span><span></span>
+          </div>
+          <h1>MINIATUR KOTA PALEMBANG</h1>
+          <p id="loader-status">Membangun Sungai Musi…</p>
+          <div class="loader-bar"><i></i></div>
+        </div>
+      </div>
+
+      <!-- Top bar -->
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">
+            <svg viewBox="0 0 48 32" aria-hidden="true">
+              <path d="M2 24h44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <rect x="12" y="4" width="5" height="20" rx="1" fill="currentColor"/>
+              <rect x="31" y="4" width="5" height="20" rx="1" fill="currentColor"/>
+              <path d="M17 10h14M17 17h14" stroke="currentColor" stroke-width="2.4"/>
+              <path d="M2 24c8-9 14-9 14-9M46 24c-8-9-14-9-14-9" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <strong>Miniatur 3D Kota Palembang</strong>
+            <span>Bumi Sriwijaya · Sungai Musi</span>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="seg" id="time-seg" role="group" aria-label="Waktu">
+            <button data-time="pagi" class="active">Pagi</button>
+            <button data-time="senja">Senja</button>
+            <button data-time="malam">Malam</button>
+          </div>
+          <button class="icon-btn" id="btn-tour" title="Tur otomatis keliling kota">
+            <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span>Tur</span>
+          </button>
+          <button class="icon-btn" id="btn-help" title="Bantuan kontrol">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.2 2.4c-.7.2-1.2.9-1.2 1.6v.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Landmark list -->
+      <aside class="panel-left" id="landmark-panel">
+        <div class="panel-head">
+          <h2>Landmark</h2>
+          <button class="collapse" id="btn-collapse" title="Sembunyikan">
+            <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <div class="landmark-list" id="landmark-list"></div>
+        <div class="panel-foot">
+          <label class="switch">
+            <input type="checkbox" id="toggle-labels" checked />
+            <span class="track"><span class="thumb"></span></span>
+            <span class="switch-label">Label 3D</span>
+          </label>
+        </div>
+      </aside>
+
+      <!-- Info card -->
+      <section class="info-card" id="info-card" aria-live="polite">
+        <button class="info-close" id="info-close" aria-label="Tutup">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <span class="info-kicker" id="info-kicker">Landmark</span>
+        <h3 id="info-title">—</h3>
+        <p id="info-desc">—</p>
+        <dl class="info-meta" id="info-meta"></dl>
+      </section>
+
+      <!-- 3D labels -->
+      <div id="labels"></div>
+
+      <!-- Compass / hint -->
+      <div class="hud-bottom">
+        <div class="hint" id="hint">
+          <b>Drag</b> memutar · <b>Scroll</b> zoom · <b>Klik</b> landmark
+        </div>
+        <div class="compass" id="compass" title="Arah mata angin">
+          <svg viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="2"/>
+            <g id="compass-rose">
+              <path d="M32 8 L38 32 L32 28 L26 32 Z" fill="#e4443a"/>
+              <path d="M32 56 L26 32 L32 36 L38 32 Z" fill="currentColor" fill-opacity=".55"/>
+            </g>
+            <text x="32" y="17" text-anchor="middle" font-size="11" fill="currentColor" font-weight="700">U</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Help modal -->
+      <div class="modal-backdrop" id="help-modal" hidden>
+        <div class="modal">
+          <button class="info-close" id="help-close" aria-label="Tutup">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <h3>Cara menjelajah</h3>
+          <ul class="help-list">
+            <li><b>Putar kamera</b> — tahan klik kiri lalu geser (atau satu jari di layar sentuh).</li>
+            <li><b>Geser peta</b> — tahan klik kanan / dua jari.</li>
+            <li><b>Zoom</b> — scroll mouse atau cubit dua jari.</li>
+            <li><b>Fokus landmark</b> — klik bangunan di scene atau pilih dari daftar Landmark.</li>
+            <li><b>Waktu</b> — ganti suasana Pagi, Senja, dan Malam (lampu kota menyala).</li>
+            <li><b>Tur</b> — kamera berkeliling otomatis ke tiap landmark.</li>
+          </ul>
+          <p class="help-note">Model ini adalah interpretasi miniatur bergaya <i>diorama</i>: proporsi dan tata letak disederhanakan agar seluruh ikon kota terlihat dalam satu pandangan.</p>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

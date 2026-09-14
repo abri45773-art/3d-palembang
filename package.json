@@ -1,0 +1,31 @@
+{
+  "name": "3d-palembang",
+  "version": "1.0.0",
+  "description": "Model 3D miniatur Kota Palembang: Jembatan Ampera, Masjid Agung, Benteng Kuto Besak, Monpera, Pulau Kemaro, dan Sungai Musi.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abri45773-art/3d-palembang.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abri45773-art/3d-palembang/issues"
+  },
+  "homepage": "https://github.com/abri45773-art/3d-palembang#readme",
+  "devDependencies": {
+    "puppeteer-core": "^23.11.1",
+    "vite": "^5.4.21"
+  },
+  "dependencies": {
+    "three": "^0.169.0"
+  },
+  "private": true,
+  "type": "module"
+}
