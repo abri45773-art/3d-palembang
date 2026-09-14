@@ -9,6 +9,7 @@
  * ------------------------------------------------------------------ */
 import * as THREE from 'three';
 import { parser } from '@shaderfrog/glsl-parser';
+import { semanticCheck, selfTest } from './glsl-semantic.mjs';
 
 globalThis.document = {
   createElement: () => ({ width: 0, height: 0, getContext: () => new Proxy({}, { get: () => () => ({ addColorStop() {} }) }) }),
@@ -57,6 +58,16 @@ const targets = [
 /* tiga.js menyuntikkan #define ini sebelum shader; parser perlu melihatnya */
 const DEFINES = '#define TONE_MAPPING\n#define SRGB_TRANSFER\n';
 
+/* --- gerbang: pemeriksa semantik harus terbukti bisa menangkap bug --- */
+const selfFails = selfTest();
+if (selfFails.length) {
+  console.error('  ✗ uji mandiri pemeriksa semantik gagal:');
+  selfFails.forEach((f) => console.error('      ' + f));
+  console.error('\nGAGAL: hasil semantik tidak dapat dipercaya.');
+  process.exit(1);
+}
+console.log('  ✓ pemeriksa semantik lolos uji mandiri (3 kelas bug tertangkap)');
+
 let failed = 0;
 for (const [name, src, header] of targets) {
   const full = expandIncludes(DEFINES + header + src);
@@ -67,6 +78,15 @@ for (const [name, src, header] of targets) {
   } catch (err) {
     failed++;
     console.error(`  ✗ ${name}: ${err.message.split('\n')[0]}`);
+  }
+
+  /* semantik: identifier yang dipakai tapi tidak pernah dideklarasi */
+  const sem = semanticCheck(full);
+  if (sem.unknown.length) {
+    failed++;
+    console.error(`  ✗ ${name}: identifier tak terdeklarasi -> ${sem.unknown.join(', ')}`);
+  } else {
+    console.log(`    └ semantik bersih (${sem.used} identifier dipakai, ${sem.declared} dideklarasi)`);
   }
 }
 

@@ -90,6 +90,14 @@ di Node dan benar-benar mengeksekusi kode adegan:
   siklus waktu (fajar → malam), 90 frame animasi, dan kelengkapan data 18 landmark.
 - `npm run test:shaders` — mengambil shader dari modul aslinya, menguraikan `#include` three.js,
   lalu mem-parse GLSL-nya untuk menangkap galat sintaks serta memastikan 13 uniform air terkirim.
+  Dilanjutkan **pemeriksaan semantik** (`scripts/glsl-semantic.mjs`) yang membandingkan identifier
+  yang dipakai dengan yang dideklarasi, sehingga salah ketik seperti `uSunDirr` ikut tertangkap —
+  hal yang tidak bisa dilakukan parser sintaks.
+
+Pemeriksa semantik itu **menguji dirinya sendiri** sebelum dipakai: ia harus membebaskan kode
+yang benar dan menangkap tiga kelas bug (uniform salah ketik, variabel lokal tak dideklarasi,
+pemanggilan fungsi tak dikenal). Kalau uji mandiri gagal, seluruh uji shader dihentikan, karena
+hasil "bersih" dari pemeriksa yang rusak tidak berarti apa-apa.
 
 > Catatan: maket ini adalah **diorama stilasi** untuk keperluan visual — proporsi landmark
 > mengikuti angka yang tercantum di atas, tetapi jarak antar-landmark dipadatkan agar seluruh
