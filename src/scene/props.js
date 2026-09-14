@@ -132,7 +132,7 @@ export function buildStreetLamps(parent, railPts = []) {
   // lampu kade tepian sungai
   for (const [x, , z] of railPts) {
     if (Math.abs(((x / 6) | 0) % 7) !== 0) continue;
-    lamp(x, z, 3.3, z < 0 ? 1 : -1);
+    lamp(x, z, 2.42, z < 0 ? 1 : -1);   // berdiri di atas pelat kade
   }
   kit.build(g, { castShadow: false, receiveShadow: false, name: 'lampu' });
   return { group: g };

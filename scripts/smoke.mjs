@@ -30,6 +30,10 @@ globalThis.document = {
   },
 };
 
+const warnings = [];
+const origWarn = console.warn;
+console.warn = (...a) => { warnings.push(a.join(' ')); };
+
 /* ------------------------- jalankan dunia ------------------------- */
 const { createWorld } = await import('../src/scene/world.js');
 const { LANDMARKS, CATEGORIES } = await import('../src/data/landmarks.js');
@@ -131,6 +135,7 @@ if (mC !== mA) fail_extra.push('cache material tidak dipakai ulang untuk kunci y
 const fail = [];
 const fail_extra = [];
 fail.push(...fail_extra);
+if (warnings.length) fail.push(`${warnings.length} console.warn saat perakitan: ${warnings.slice(0, 3).join(' | ')}`);
 if (nan) fail.push(`${nan} mesh dengan nilai NaN`);
 if (emptyGeo) fail.push(`${emptyGeo} mesh geometri kosong`);
 if (meshes < 60) fail.push(`mesh terlalu sedikit (${meshes})`);
@@ -149,10 +154,16 @@ console.log(`bangunan prosedural: ${world.stats.buildings}`);
 console.log(`label landmark    : ${world.labels.length}`);
 console.log(`kurva LRT         : ${world.sky ? 'ok' : 'gagal'}`);
 console.log(`cache material    : ${matCacheOk ? 'unik per tekstur' : 'BERTABRAKAN'}`);
+console.warn = origWarn;
+console.log(`console.warn      : ${warnings.length}`);
 console.log(`nilai malam/jam   : ${JSON.stringify(nightByHour)}`);
 console.log('──────────────────────────────────────────────────');
 
 if (fail.length) {
+  if (warnings.length) {
+    console.error('rincian peringatan:');
+    for (const w of [...new Set(warnings)]) console.error('  · ' + w);
+  }
   console.error('GAGAL:');
   for (const f of fail) console.error('  ✗ ' + f);
   process.exit(1);

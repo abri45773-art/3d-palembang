@@ -118,14 +118,16 @@ export function buildKampungKapitan(parent, x = -66, z = 92) {
   const tx = x + 2, tz = bank + 30;
   rumahPanggung(kit, { w: 11, d: 9, h: 5, x: tx, z: tz, body: mRed, roof: 'chinese', roofMat: mRoofDark, lantern: true });
   for (const sx of [-1, 1]) {
-    kit.add(place(gCyl(0.5, 0.6, 6.0, 8, tx + sx * 7.5, GROUND, tz + 6.5), mRed));
+    kit.add(gCyl(0.5, 0.6, 6.0, 8, tx + sx * 7.5, GROUND, tz + 6.5), mRed);
     const cap = gCurvedRoof(2.2, 1.1, 4, 5);
     cap.rotateY(Math.PI / 4);
-    kit.add(place(cap.translate(0, GROUND + 6.0, 0), tx + sx * 7.5, tz + 6.5));
+    cap.translate(0, GROUND + 6.0, 0);
+    kit.add(place(cap, tx + sx * 7.5, tz + 6.5), mRoofDark);
   }
   // jalan papan antar rumah
   for (let i = -3; i <= 3; i++) {
-    kit.add(place(gBox(2.2, 0.16, 34, x + i * 11, GROUND + 0.1, bank + 30), mWood));
+    const plank = gBox(2.2, 0.16, 34, 0, GROUND + 0.1, 0);
+    kit.add(place(plank, x + i * 11, bank + 30), mWood);
   }
   kit.build(g, { castShadow: true, receiveShadow: true, name: 'kampung-kapitan' });
 

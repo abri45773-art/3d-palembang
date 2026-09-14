@@ -42,13 +42,12 @@ const matCache = new Map();
  * mis. papan nama "SRIWIJAYA" vs "JAKABARING SPORT CITY".
  */
 export function mat(color, opts = {}) {
-  const texIds = ['map', 'emissiveMap', 'roughnessMap', 'normalMap']
-    .map((k) => (opts[k] ? opts[k].id : 0))
-    .join(',');
-  const rest = JSON.stringify(opts, (k, v) =>
-    k === 'map' || k === 'emissiveMap' || k === 'roughnessMap' || k === 'normalMap' ? undefined : v
-  );
-  const key = `${color}|${texIds}|${rest}`;
+  const TEX_KEYS = ['map', 'emissiveMap', 'roughnessMap', 'normalMap'];
+  const texIds = TEX_KEYS.map((k) => (opts[k] ? opts[k].id : 0)).join(',');
+  // salinan tanpa tekstur: jangan menyerialkan objek Texture (memicu toJSON)
+  const rest = {};
+  for (const [k, v] of Object.entries(opts)) if (!TEX_KEYS.includes(k)) rest[k] = v;
+  const key = `${color}|${texIds}|${JSON.stringify(rest)}`;
   let m = matCache.get(key);
   if (!m) {
     m = new THREE.MeshStandardMaterial({ color: new THREE.Color(color), ...opts });
@@ -127,7 +126,13 @@ export class Kit {
   }
   /** @param {THREE.BufferGeometry} geo @param {THREE.Material} material */
   add(geo, material) {
-    if (!geo || !material) return this;
+    if (!material) {
+      // geometri tanpa material akan hilang diam-diam setelah merge;
+      // lebih baik berisik supaya ketahuan saat pengembangan
+      console.warn('[Kit] geometri dibuang: material kosong', geo && geo.type);
+      return this;
+    }
+    if (!geo) return this;
     const idx = materialCacheId(material);
     const kind = geo.index ? 'i' : 'n';
     const key = `${idx}|${kind}`;

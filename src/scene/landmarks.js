@@ -256,9 +256,11 @@ export function buildMonpera(parent, x = 22, z = -78) {
   const head = new THREE.SphereGeometry(0.42, 10, 8);
   head.translate(0, GROUND + 10.1, 0);
   kit.add(head, mBronze);
-  const arm = gBox(0.24, 1.6, 0.24, 0.4, GROUND + 9.4, 0);
+  // lengan terangkat: pangkal di titik asal, putar, baru tempatkan di bahu
+  const arm = gBox(0.24, 1.6, 0.24, 0, 0, 0);
+  arm.translate(0, 0.8, 0);
   arm.rotateZ(-0.5);
-  arm.translate(0, 0, 0);
+  arm.translate(0.42, GROUND + 9.3, 0);
   kit.add(arm, mBronze);
   // tiang bendera
   kit.add(gCyl(0.1, 0.14, 6.5, 6, 5.5, GROUND, 5.5), mSteel);
