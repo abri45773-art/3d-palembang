@@ -1,0 +1,22 @@
+{
+  "name": "3d-palembang",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Miniatur 3D interaktif Kota Palembang (diorama WebGL berbasis three.js)",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "test:smoke": "node scripts/smoke.mjs",
+    "test:shaders": "node scripts/shaders.mjs",
+    "test": "node scripts/smoke.mjs && node scripts/shaders.mjs"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "@shaderfrog/glsl-parser": "^7.0.1",
+    "vite": "7.3.6"
+  }
+}
