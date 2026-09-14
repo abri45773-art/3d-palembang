@@ -131,6 +131,26 @@ if (!matCacheOk) fail_extra.push('cache material menabrak dua tekstur berbeda');
 const mC = mat('#101418', { map: texA, roughness: 0.5 });
 if (mC !== mA) fail_extra.push('cache material tidak dipakai ulang untuk kunci yang sama');
 
+/* ------------------- pemasangan UI (JS <-> HTML) ------------------- *
+ * Kegagalan klasik di peramban: $('#x') mengembalikan null lalu
+ * null.addEventListener melempar. Semua selector harus ada di index.html.
+ * ------------------------------------------------------------------ */
+import { readFileSync } from 'node:fs';
+const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const htmlIds = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
+const jsSrc = ['../src/main.js', '../src/ui.js']
+  .map((f) => readFileSync(new URL(f, import.meta.url), 'utf8'))
+  .join('\n');
+const usedSelectors = new Set([
+  ...[...jsSrc.matchAll(/\$\('#([\w-]+)'\)/g)].map((m) => m[1]),
+  ...[...jsSrc.matchAll(/getElementById\('([\w-]+)'\)/g)].map((m) => m[1]),
+  ...[...jsSrc.matchAll(/bind\('#([\w-]+)'/g)].map((m) => m[1]),
+]);
+const missingSelectors = [...usedSelectors].filter((id) => !htmlIds.has(id));
+if (missingSelectors.length) {
+  fail.push(`selector tanpa elemen di index.html: ${missingSelectors.join(', ')}`);
+}
+
 /* ------------------------- laporan -------------------------------- */
 const fail = [];
 const fail_extra = [];
@@ -156,6 +176,7 @@ console.log(`kurva LRT         : ${world.sky ? 'ok' : 'gagal'}`);
 console.log(`cache material    : ${matCacheOk ? 'unik per tekstur' : 'BERTABRAKAN'}`);
 console.warn = origWarn;
 console.log(`console.warn      : ${warnings.length}`);
+console.log(`selector UI       : ${usedSelectors.size} dipakai, ${missingSelectors.length} hilang`);
 console.log(`nilai malam/jam   : ${JSON.stringify(nightByHour)}`);
 console.log('──────────────────────────────────────────────────');
 
