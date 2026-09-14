@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Miniatur 3D Kota Palembang — Bumi Sriwijaya</title>
+  <meta name="description" content="Diorama/miniatur tiga dimensi interaktif Kota Palembang: Jembatan Ampera, Sungai Musi, Masjid Agung, Benteng Kuto Besak, dan landmark lainnya." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <canvas id="scene"></canvas>
+
+  <!-- Label landmark yang diproyeksikan dari ruang 3D -->
+  <div id="labels" aria-hidden="true"></div>
+
+  <header id="brand">
+    <div class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="34" height="34"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 12h26"/><path d="M8 12V7M24 12V7"/><path d="M8 7v-2h2v2M24 7v-2h2v2" /><path d="M3 12v5M29 12v5"/><path d="M2 22c3.5-2.5 6.5 2.5 10 0s6.5 2.5 10 0 6.5 2.5 8 1.2"/></g></svg>
+    </div>
+    <div class="brand-text">
+      <h1>Miniatur Kota <span>Palembang</span></h1>
+      <p>Diorama 3D · Bumi Sriwijaya · Sungai Musi</p>
+    </div>
+  </header>
+
+  <aside id="panel">
+    <div class="panel-head">
+      <h2>Landmark</h2>
+      <button id="panel-close" class="icon-btn" title="Tutup panel" aria-label="Tutup panel">✕</button>
+    </div>
+    <input id="search" type="search" placeholder="Cari landmark…" autocomplete="off" />
+    <nav id="landmark-list"></nav>
+    <div class="panel-foot">
+      <span id="stat"></span>
+    </div>
+  </aside>
+  <button id="panel-open" class="icon-btn floating" title="Buka daftar landmark" aria-label="Buka daftar landmark">☰</button>
+
+  <section id="info" class="hidden" aria-live="polite">
+    <button id="info-close" class="icon-btn" title="Tutup" aria-label="Tutup info">✕</button>
+    <span id="info-cat" class="chip"></span>
+    <h3 id="info-title"></h3>
+    <p id="info-body"></p>
+    <div id="info-facts"></div>
+  </section>
+
+  <div id="controls">
+    <div class="ctl-group">
+      <span class="ctl-label">Waktu</span>
+      <div class="seg" id="time-presets">
+        <button data-hour="6.5"  title="Subuh / fajar">Fajar</button>
+        <button data-hour="9"    title="Pagi">Pagi</button>
+        <button data-hour="13"   title="Siang" class="active">Siang</button>
+        <button data-hour="17.5" title="Senja / golden hour">Senja</button>
+        <button data-hour="21"   title="Malam">Malam</button>
+      </div>
+      <input id="hour" type="range" min="0" max="24" step="0.25" value="13" aria-label="Jam" />
+    </div>
+
+    <div class="ctl-group toggles">
+      <button id="t-rotate"  class="tgl active" title="Putar kamera otomatis">Putar</button>
+      <button id="t-labels"  class="tgl active" title="Tampilkan nama landmark">Label</button>
+      <button id="t-traffic" class="tgl active" title="Animasi lalu lintas, ketek & LRT">Hidup</button>
+      <button id="t-top"     class="tgl"        title="Tampak atas">Atas</button>
+    </div>
+  </div>
+
+  <div id="hint">Seret untuk memutar · Scroll untuk zoom · Klik kanan untuk menggeser</div>
+
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-ring"></div>
+      <p>Merakit miniatur Kota Palembang…</p>
+      <small id="loader-step">menyiapkan Sungai Musi</small>
+    </div>
+  </div>
+
+  <div id="fatal" class="hidden">
+    <h3>WebGL tidak tersedia</h3>
+    <p>Browser atau perangkat ini tidak mendukung WebGL yang dibutuhkan untuk menampilkan miniatur 3D. Coba peramban modern (Chrome, Edge, Firefox, Safari) dengan akselerasi perangkat keras aktif.</p>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
